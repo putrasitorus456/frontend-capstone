@@ -1,0 +1,195 @@
+/* Login.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Left side */
+.leftSide {
+  background: linear-gradient(135deg, #0070f3, #0051a2);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+  width: 100%;
+  flex: 0 1 auto;
+}
+
+/* Heading */
+.heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Sub-heading */
+.subHeading {
+  background-color: #32c5ff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+/* Right side */
+.rightSide {
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  flex: 1;
+  transform: scale(1.1); /* Perbesar konten right-side */
+}
+
+/* Form Elements */
+.greeting {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+}
+
+.welcomeText {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.input {
+  padding: 12px 20px;
+  padding-left: 40px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  color: black;
+}
+
+.loginButton {
+  padding: 12px 0;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 112, 243, 0.2);
+}
+
+.loginButton:hover {
+  background-color: #005bb5;
+  box-shadow: 0 4px 8px rgba(0, 112, 243, 0.4);
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Copyright styling */
+.copyright {
+  font-size: 0.875rem;
+  color: #2792c4;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Responsivitas */
+
+/* Tablet dan layar besar */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .leftSide {
+    flex: 1;
+    padding: 150px 100px;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .rightSide {
+    flex: 1;
+    padding: 150px 100px;
+    align-items: center;
+    text-align: left;
+    transform: scale(1); /* Perbesar konten untuk layar besar */
+  }
+
+  .heading {
+    font-size: 3.5rem;
+    white-space: nowrap;
+  }
+
+  .subHeading {
+    font-size: 1.125rem;
+  }
+}
+
+/* Layar kecil */
+@media (max-width: 768px) {
+  .leftSide {
+    padding: 40px 20px; /* Perbesar padding vertikal untuk layar kecil */
+    height: 30vh; /* Perbesar tinggi left-side */
+  }
+
+  .rightSide {
+    margin-top: 0;
+    padding: 20px;
+    transform: scale(1); /* Perbesar konten right-side */
+  }
+
+  .heading {
+    font-size: 2rem;
+  }
+
+  .subHeading {
+    font-size: 0.875rem;
+  }
+
+  .copyright {
+    margin-top: 10px; /* Atur jarak bawah button login */
+    order: 1; /* Tempatkan copyright langsung di bawah form */
+  }
+
+  .form {
+    order: 0; /* Tempatkan form di atas copyright */
+  }
+}
+
+/* Layar ponsel yang sangat kecil */
+@media (max-width: 480px) {
+  .leftSide {
+    padding: 15px;
+    height: 50vh; /* Atur tinggi yang sesuai untuk ponsel kecil */
+  }
+
+  .heading {
+    font-size: 1.8rem;
+  }
+
+  .subHeading {
+    font-size: 0.75rem;
+  }
+}
