@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
   const [currentEventPage, setCurrentEventPage] = useState(1);
   const eventsPerPage2 = 3;
 
-  const notificationsPerPage = 3;
+  const notificationsPerPage = 2;
 
   useEffect(() => {
     // Impor `leaflet` hanya di client-side
