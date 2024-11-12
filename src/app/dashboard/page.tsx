@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import Layout from "../components/Layout";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import StreetLightOverview from "./overview";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -12,6 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faLightbulb, faWifi, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import dynamic from 'next/dynamic';
+import "leaflet/dist/leaflet.css";
+
+// Import `MapContainer` dan `TileLayer` secara dinamis
+const DynamicMapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
+const DynamicTileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
+const DynamicMarker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
+const DynamicPopup = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ssr: false });
 
 type Event = {
   time: string;
@@ -25,22 +32,8 @@ type Event = {
   type: string;
 };
 
-const createColoredIcon = (color: string, lampId: string): L.DivIcon => {
-  return L.divIcon({
-    html: `
-      <div 
-        style=" background-color: ${color}; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; font-size: 12px; font-weight: bold; text-align: center; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);"
-      >
-        ${lampId}
-      </div>`,
-    className: "",
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
-    popupAnchor: [0, -15],
-  });
-};
-
 const Dashboard: React.FC = () => {
+  const [L, setL] = useState<typeof import("leaflet") | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [filterIssues, setFilterIssues] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -55,6 +48,30 @@ const Dashboard: React.FC = () => {
 
   const notificationsPerPage = 3;
 
+  useEffect(() => {
+    // Impor `leaflet` hanya di client-side
+    import("leaflet").then((module) => {
+      setL(module);
+    });
+  }, []);
+
+  const createColoredIcon = (color: string, lampId: string) => {
+    // Pastikan `L` sudah diimpor
+    if (!L) return undefined;
+
+    return L.divIcon({
+      html: `
+        <div 
+          style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+          ${lampId}
+        </div>
+      `,
+      className: "",
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+      popupAnchor: [0, -15],
+    });
+  };
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -464,24 +481,24 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="flex-grow h-full w-full relative z-0">
-              <MapContainer
+              <DynamicMapContainer
                 center={[-7.756624975779352, 110.34700231815647]}
                 zoom={18}
                 scrollWheelZoom={false}
                 className="w-full h-full"
               >
-                <TileLayer
+                <DynamicTileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
                 />
                 {filteredEvents.map(event => (
                   event.lat !== null && event.lon !== null && (
-                    <Marker
+                    <DynamicMarker
                       key={event.lampId}
                       position={[event.lat, event.lon]}
                       icon={createColoredIcon(event.color, event.lampId)}
                     >
-                      <Popup>
+                      <DynamicPopup>
                         <div style={{ fontSize: "14px", fontFamily: "Arial, sans-serif" }}>
                           <strong>Lamp ID: {event.lampId}</strong>
                           <hr />
@@ -489,11 +506,11 @@ const Dashboard: React.FC = () => {
                           <p>Alert: {event.alert}</p>
                           <p>Type: {event.type}</p>
                         </div>
-                      </Popup>
-                    </Marker>
+                      </DynamicPopup>
+                    </DynamicMarker>
                   )
                 ))}
-              </MapContainer>
+              </DynamicMapContainer>
             </div>
           </div>
         </div>
