@@ -43,7 +43,7 @@ const Streetlight = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/streetlights");
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/streetlights");
         if (!response.ok) throw new Error("Failed to fetch data");
         const data = await response.json();
         const sortedData = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -72,7 +72,7 @@ const Streetlight = () => {
                 onClick: async () => {
                     try {
                         setLoading(true);
-                        const response = await fetch(`https://pju-backend.vercel.app/api/streetlights/${_id}`, {
+                        const response = await fetch(`https://backend-capstone-production-99e8.up.railway.app/api/streetlights/${_id}`, {
                             method: 'DELETE',
                         });
                         if (!response.ok) throw new Error("Failed to delete data");
@@ -99,8 +99,8 @@ const Streetlight = () => {
     try {
       const method = isEditing ? "PUT" : "POST";
       const url = isEditing
-        ? `https://pju-backend.vercel.app/api/streetlights/${currentLight._id}`
-        : "https://pju-backend.vercel.app/api/streetlights";
+        ? `https://backend-capstone-production-99e8.up.railway.app/api/streetlights/${currentLight._id}`
+        : "https://backend-capstone-production-99e8.up.railway.app/api/streetlights";
 
       const response = await fetch(url, {
         method,
@@ -211,7 +211,6 @@ const Streetlight = () => {
                 placeholder="Streetlight Code"
                 value={currentLight.streetlight_code}
                 onChange={(e) => setCurrentLight({ ...currentLight, streetlight_code: e.target.value })}
-                required
                 className="border border-black px-4 py-2 rounded-lg w-full"
               />
               <input
@@ -281,7 +280,9 @@ const Streetlight = () => {
                   <tr key={light._id} className={`border-t border-gray-200 text-black text-sm ${index % 2 === 0 ? 'bg-gray-300' : 'bg-white'}`}>
                     <td className="px-2 py-2 text-center">{startIndex + index + 1}</td>
                     <td className="px-2 py-2 text-center">{light.anchor_code}</td>
-                    <td className="px-2 py-2 text-center">{light.streetlight_code}</td>
+                    <td className="px-2 py-2 text-center">
+                      {light.streetlight_code ? light.streetlight_code : "Anchor"}
+                    </td>
                     <td className="px-2 py-2 text-center">
                       {light.location && light.location.length >= 2 ? (
                         <a

@@ -40,7 +40,7 @@ const Insight = () => {
       setLoading(true);
       try {
         if (activeTab === 'notification') {
-          const response = await fetch('https://pju-backend.vercel.app/api/notification');
+          const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/notification');
           const data: Notification[] = await response.json();
           setNotificationDataList(data);
 
@@ -99,7 +99,7 @@ const Insight = () => {
             ],
           });
         } else if (activeTab === 'repair') {
-          const response = await fetch('https://pju-backend.vercel.app/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
+          const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
           const data: Repair[] = await response.json();
           setRepairDataList(data);
 
@@ -113,10 +113,12 @@ const Insight = () => {
             }
             if (item.body.includes('permasalahan sensor')) {
               groupedRepairData[date].sensor += 1;
-            } if (item.body.includes('permasalahan bola lampu') || item.body.includes('permasalahan Bola lampu')) {
-              groupedRepairData[date].lampu += 1;
-            } else if (item.body.includes('permasalahan komunikasi') || item.body.includes('permasalahan communication')) {
+            }
+            if (item.body.includes('permasalahan komunikasi') || item.body.includes('permasalahan communication')) {
               groupedRepairData[date].komunikasi += 1;
+            }
+            if (item.body.includes('permasalahan bola lampu') || item.body.includes('permasalahan Bola lampu') || item.body.includes('lamp') || item.body.includes('permasalahan lampu')) {
+              groupedRepairData[date].lampu += 1;
             }
           });
 

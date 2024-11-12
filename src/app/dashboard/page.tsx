@@ -46,6 +46,7 @@ const Dashboard: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,7 +65,7 @@ const Dashboard: React.FC = () => {
     const fetchEvents = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("https://pju-backend.vercel.app/api/events");
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/events");
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
@@ -88,7 +89,7 @@ const Dashboard: React.FC = () => {
               status: event.last_status === 0 ? "Mati" : event.last_status === 1 ? "Hidup" : "Issue",
               lat: lat,
               lon: lon,
-              lampId: `${event.anchor_code}${event.streetlight_code}`,
+              lampId: event.streetlight_code ? `${event.anchor_code}${event.streetlight_code}` : event.anchor_code,
               color: event.problem ? "#ffa500" : (event.last_status === 0 ? "#808080" : "#007bff"),
               alert: event.problem || "-",
               assignable: !!event.problem,
@@ -126,22 +127,30 @@ const Dashboard: React.FC = () => {
     const fetchNotifications = async () => {
       if (selectedEvent) {
         const lampId = selectedEvent.lampId;
-        const anchor_code = lampId.charAt(0);
-        const streetlight_code = lampId.slice(1);
+        const anchor_code = lampId.charAt(0) + lampId.charAt(1);
+        const streetlight_code = lampId.slice(2);
+        console.log(anchor_code, streetlight_code);
         try {
-          const response = await fetch(`https://pju-backend.vercel.app/api/notification/${anchor_code}/${streetlight_code}`);
+          const response = await fetch(`https://backend-capstone-production-99e8.up.railway.app/api/notification/${anchor_code}/${streetlight_code}`);
           const data = await response.json();
-
-          // Urutkan data berdasarkan tanggal terbaru
-          const sortedData = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          setNotifications(sortedData);
+    
+          // Periksa jika notifikasi ditemukan
+          if (data && data.length > 0) {
+            // Urutkan data berdasarkan tanggal terbaru
+            const sortedData = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            setNotifications(sortedData);
+          } else {
+            // Kosongkan riwayat jika tidak ada notifikasi
+            setNotifications([]);
+          }
         } catch (error) {
           console.error("Error fetching notifications:", error);
+          setNotifications([]); // Kosongkan riwayat jika terjadi error
         }
       }
     };
-
-    fetchNotifications();
+    
+    fetchNotifications();    
   }, [selectedEvent]);
 
   const indexOfLastNotification = currentPage * notificationsPerPage;
@@ -154,32 +163,29 @@ const Dashboard: React.FC = () => {
 
   const handleTurnOn = async () => {
     if (selectedEvent) {
-      const lampId = selectedEvent.lampId;
-      const anchor_code = lampId.charAt(0);
-      const streetlight_code = lampId.slice(1);
-
+      const block = selectedEvent.lampId;
+  
       const requestBody = {
-        type: 1,
-        anchor_code: anchor_code,
-        streetlight_code: streetlight_code,
+        block, 
       };
-
-      setIsLoading(true);  // Set isLoading ke true saat proses API dimulai
-
+  
+      setIsLoadingData(true); 
+  
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/notification", {
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/on", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(requestBody),
         });
-
+  
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
+  
         const data = await response.json();
+        console.log(data);
         toast.success("Streetlight turned on successfully!", {
           onClose: () => {
             window.location.reload();
@@ -192,39 +198,36 @@ const Dashboard: React.FC = () => {
           autoClose: 1500,
         });
       } finally {
-        setIsLoading(false);  // Set isLoading ke false setelah proses selesai
+        setIsLoadingData(false);  // Set isLoading ke false setelah proses selesai
       }
     }
-  };
+  };  
 
   const handleTurnOff = async () => {
     if (selectedEvent) {
-      const lampId = selectedEvent.lampId;
-      const anchor_code = lampId.charAt(0);
-      const streetlight_code = lampId.slice(1);
-
+      const block = selectedEvent.lampId;
+  
       const requestBody = {
-        type: 0,
-        anchor_code: anchor_code,
-        streetlight_code: streetlight_code,
+        block, 
       };
-
-      setIsLoading(true);  // Set isLoading ke true saat proses API dimulai
-
+  
+      setIsLoadingData(true); 
+  
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/notification", {
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/off", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(requestBody),
         });
-
+  
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
+  
         const data = await response.json();
+        console.log(data);
         toast.success("Streetlight turned off successfully!", {
           onClose: () => {
             window.location.reload();
@@ -237,7 +240,7 @@ const Dashboard: React.FC = () => {
           autoClose: 1500,
         });
       } finally {
-        setIsLoading(false);  // Set isLoading ke false setelah proses selesai
+        setIsLoadingData(false);  // Set isLoading ke false setelah proses selesai
       }
     }
   };
@@ -245,14 +248,26 @@ const Dashboard: React.FC = () => {
   return (
     <div className="bg-white min-h-screen h-screen">
       {/* Overlay Loading */}
-      {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="text-center">
-            <div className="loader mb-4"></div> {/* Spinner */}
-            <p className="text-lg font-semibold text-white">Loading...</p>
+        {isLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="flex flex-col items-center text-center">
+              <div className="loader mb-4"></div> {/* Spinner */}
+              <p className="text-lg font-semibold text-white">
+                Loading ...
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+          {isLoadingData && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="flex flex-col items-center text-center">
+              <div className="loader mb-4"></div> {/* Spinner */}
+              <p className="text-lg font-semibold text-white">
+                This process takes up to 1-2 minutes, please be patient ...
+              </p>
+            </div>
+          </div>
+        )}
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -362,7 +377,7 @@ const Dashboard: React.FC = () => {
                       <div className="text-center mt-8">
                         {selectedEvent.alert !== "-" ? (
                           <p className="text-gray-600 font-semibold">Petugas perbaikan telah ditugaskan</p>
-                        ) : selectedEvent.status === "Mati" ? (
+                        ) : selectedEvent.status === "Mati" && /^[^\d]+$/.test(selectedEvent.lampId) ? (
                           <div>
                             <p className="text-gray-600 font-semibold">Light this sector?</p>
                             <button
@@ -373,7 +388,7 @@ const Dashboard: React.FC = () => {
                               On
                             </button>
                           </div>
-                        ) : (
+                        ) : selectedEvent.status === "Hidup" && /^[^\d]+$/.test(selectedEvent.lampId) ? (
                           <div>
                             <p className="text-gray-600 font-semibold">Turn off this sector?</p>
                             <button
@@ -384,7 +399,7 @@ const Dashboard: React.FC = () => {
                               Off
                             </button>
                           </div>
-                        )}
+                        ) : null }
                       </div>
                     </div>
                   </div>
@@ -450,8 +465,8 @@ const Dashboard: React.FC = () => {
 
             <div className="flex-grow h-full w-full relative z-0">
               <MapContainer
-                center={[-7.797068, 110.370529]}
-                zoom={13}
+                center={[-7.756624975779352, 110.34700231815647]}
+                zoom={18}
                 scrollWheelZoom={false}
                 className="w-full h-full"
               >

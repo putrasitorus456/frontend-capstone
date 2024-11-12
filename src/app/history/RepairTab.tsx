@@ -26,13 +26,13 @@ const RepairTab = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/responses/combined");
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/responses/combined");
         const jsonData = await response.json();
 
         const sortedData = jsonData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
         const transformedData = sortedData.map((item: any, index: any) => {
-          const issues = ["Bola Lampu", "sensor", "komunikasi", "lamp", "communication"];
+          const issues = ["communication", "komunikasi", "Bola Lampu", "sensor", "lamp"];
           let detectedIssue = "ISSUES";
           
           for (const issue of issues) {

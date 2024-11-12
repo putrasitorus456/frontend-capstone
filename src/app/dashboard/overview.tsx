@@ -7,13 +7,14 @@ const StreetLightOverview = () => {
     installed_yet_1: 0,
     installed_yet_0: 0,
     condition_1: 0,
-    condition_0: 0
+    condition_0: 0,
+    repaired: 0,
   });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://pju-backend.vercel.app/api/streetlights/stats');
+        const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/streetlights/stats');
         const data = await response.json();
         setStats(data);
       } catch (error) {
@@ -75,7 +76,7 @@ const StreetLightOverview = () => {
           <div className="flex items-center">
             <FaWrench className="text-xl mr-4" />
             <div className="text-left">
-              <span className="text-xl font-bold">1</span> {/* Hardcoded example */}
+              <span className="text-xl font-bold">{stats.repaired}</span> {/* Hardcoded example */}
               <p className="text-sm">Repaired</p>
             </div>
           </div>
