@@ -181,11 +181,15 @@ const Dashboard: React.FC = () => {
   const handleTurnOn = async () => {
     if (selectedEvent) {
       const anchor_code = selectedEvent.lampId;
+
+      console.log(anchor_code);
   
       const requestBody = {
-        type: "1",
+        type: 1,
         anchor_code, 
       };
+
+      console.log(requestBody);
   
       setIsLoadingData(true); 
   
@@ -224,11 +228,15 @@ const Dashboard: React.FC = () => {
   const handleTurnOff = async () => {
     if (selectedEvent) {
       const anchor_code = selectedEvent.lampId;
+
+      console.log(anchor_code);
   
       const requestBody = {
-        type: "0",
-        anchor_code, 
+        type: 0,
+        anchor_code: anchor_code, 
       };
+
+      console.log(requestBody);
   
       setIsLoadingData(true); 
   
