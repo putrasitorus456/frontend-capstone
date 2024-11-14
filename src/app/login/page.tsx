@@ -1,9 +1,9 @@
 "use client"; // Mark this as a client component
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Use from next/navigation
+import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Login.module.css";
 
 const Login = () => {
@@ -23,8 +23,9 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setError(null); // Reset error before login attempt
 
+    // Check if the username and password are correct
     if (username === "admin" && password === "admin") {
       localStorage.setItem("isLoggedIn", "true");
       setIsLoggedIn(true);
@@ -36,65 +37,59 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
+      {/* Left side section */}
       <div className={styles.leftSide}>
         <h1 className={styles.heading}>Monitoring Dashboard</h1>
-        <p className={styles.subHeading}>
-          Yogyakarta Smart Freeway Street Light System
-        </p>
+        <p className={styles.subHeading}>Yogyakarta Smart Freeway Street Light System</p>
       </div>
-      {error && <p className={styles.error}>{error}</p>}
+
+      {/* Right side section (form) */}
       <div className={styles.rightSide}>
-        <div className={styles.copyright}></div>
-        <div>
-          <h2 className={styles.greeting}>Hello Admin!</h2>
-          <p className={styles.welcomeText}>Welcome Back</p>
-          <form onSubmit={handleLogin} className={styles.form}>
-            <div>
-              <div style={{ position: "relative" }}>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className={styles.input}
-                />
-              </div>
-              <div style={{ position: "relative", marginTop: "10px" }}>
-                <FontAwesomeIcon
-                  icon={faLock}
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={styles.input}
-                />
-              </div>
-            </div>
-            <button type="submit" className={styles.loginButton}>
-              Login
-            </button>
-          </form>
-        </div>
-        <div className={styles.copyright}>
-          <p>&copy; Tim Capstone (C_09) DTETI FT UGM</p>
-        </div>
+        <h2 className={styles.greeting}>Hello Again!</h2>
+        <p className={styles.welcomeText}>Please enter your login details below.</p>
+        
+        <form className={styles.form} onSubmit={handleLogin}>
+          {/* Username input field */}
+          <div className={styles.inputWrapper}>
+            <FontAwesomeIcon icon={faUser} className={styles.icon} />
+            <input
+              type="text"
+              placeholder="Username"
+              className={styles.input}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)} // Controlled input
+            />
+          </div>
+
+          {/* Password input field */}
+          <div className={styles.inputWrapper}>
+            <FontAwesomeIcon icon={faLock} className={styles.icon} />
+            <input
+              type="password"
+              placeholder="Password"
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Controlled input
+            />
+          </div>
+
+          {/* Login button */}
+          <button type="submit" className={styles.loginButton}>
+            Login
+          </button>
+
+          {/* Conditionally rendered error message */}
+          {error && (
+            <p className={styles.error}>
+              <FontAwesomeIcon icon={faExclamationTriangle} /> {error}
+            </p>
+          )}
+        </form>
+        
+        {/* Copyright information */}
+        <p className={styles.copyright}>
+          Tim Capstone C-09 DTETI FT UGM
+        </p>
       </div>
     </div>
   );

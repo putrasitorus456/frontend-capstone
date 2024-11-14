@@ -180,21 +180,16 @@ const Dashboard: React.FC = () => {
 
   const handleTurnOn = async () => {
     if (selectedEvent) {
-      const anchor_code = selectedEvent.lampId;
-
-      console.log(anchor_code);
+      const block = selectedEvent.lampId;
   
       const requestBody = {
-        type: 1,
-        anchor_code, 
+        block,
       };
-
-      console.log(requestBody);
   
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/notification", {
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/on", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -227,21 +222,16 @@ const Dashboard: React.FC = () => {
 
   const handleTurnOff = async () => {
     if (selectedEvent) {
-      const anchor_code = selectedEvent.lampId;
-
-      console.log(anchor_code);
+      const block = selectedEvent.lampId;
   
       const requestBody = {
-        type: 0,
-        anchor_code: anchor_code, 
+        block,
       };
-
-      console.log(requestBody);
   
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/notification", {
+        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/off", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
