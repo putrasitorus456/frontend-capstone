@@ -9,6 +9,7 @@ import { ChartOptions } from 'chart.js';
 import * as XLSX from 'xlsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 interface Notification {
   _id: string;
@@ -40,7 +41,7 @@ const Insight = () => {
       setLoading(true);
       try {
         if (activeTab === 'notification') {
-          const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/notification');
+          const response = await fetch('https://pju-backend.vercel.app/api/notification');
           const data: Notification[] = await response.json();
           setNotificationDataList(data);
 
@@ -99,7 +100,7 @@ const Insight = () => {
             ],
           });
         } else if (activeTab === 'repair') {
-          const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
+          const response = await fetch('https://pju-backend.vercel.app/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
           const data: Repair[] = await response.json();
           setRepairDataList(data);
 
@@ -268,6 +269,7 @@ const Insight = () => {
   const totalKomunikasi = repairData?.datasets[2]?.data.reduce((a: number, b: number) => a + b, 0) || 0;
 
   return (
+    <ProtectedRoute>
     <div className="flex h-screen overflow-hidden">
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -415,6 +417,7 @@ const Insight = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

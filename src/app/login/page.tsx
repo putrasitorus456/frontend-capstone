@@ -13,14 +13,6 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-      router.push("/dashboard");
-    }
-  }, [router]);
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null); // Reset error before login attempt

@@ -5,11 +5,13 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import NotificationTab from './NotificationTab';
 import RepairTab from './RepairTab';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const History = () => {
   const [activeTab, setActiveTab] = useState<'notification' | 'repair'>('notification');
 
   return (
+    <ProtectedRoute>
     <div className="flex flex-col lg:flex-row h-screen">
       {/* Sidebar */}
       <div className="w-full lg:w-auto">
@@ -48,6 +50,7 @@ const History = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

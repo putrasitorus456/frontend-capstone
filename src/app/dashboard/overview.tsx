@@ -14,7 +14,7 @@ const StreetLightOverview = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://backend-capstone-production-99e8.up.railway.app/api/streetlights/stats');
+        const response = await fetch('https://pju-backend.vercel.app/api/streetlights/stats');
         const data = await response.json();
         setStats(data);
       } catch (error) {

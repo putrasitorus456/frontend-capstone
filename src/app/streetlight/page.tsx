@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { confirmAlert } from 'react-confirm-alert';
+import ProtectedRoute from "../components/ProtectedRoute";
 
 interface Light {
   _id: string;
@@ -43,7 +44,7 @@ const Streetlight = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/streetlights");
+        const response = await fetch("https://pju-backend.vercel.app/api/streetlights");
         if (!response.ok) throw new Error("Failed to fetch data");
         const data = await response.json();
         const sortedData = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -72,7 +73,7 @@ const Streetlight = () => {
                 onClick: async () => {
                     try {
                         setLoading(true);
-                        const response = await fetch(`https://backend-capstone-production-99e8.up.railway.app/api/streetlights/${_id}`, {
+                        const response = await fetch(`https://pju-backend.vercel.app/api/streetlights/${_id}`, {
                             method: 'DELETE',
                         });
                         if (!response.ok) throw new Error("Failed to delete data");
@@ -93,14 +94,14 @@ const Streetlight = () => {
     });
 };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  /* const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
       const method = isEditing ? "PUT" : "POST";
       const url = isEditing
-        ? `https://backend-capstone-production-99e8.up.railway.app/api/streetlights/${currentLight._id}`
-        : "https://backend-capstone-production-99e8.up.railway.app/api/streetlights";
+        ? `https://pju-backend.vercel.app/api/streetlights/${currentLight._id}`
+        : "https://pju-backend.vercel.app/api/streetlights";
 
       const response = await fetch(url, {
         method,
@@ -144,6 +145,53 @@ const Streetlight = () => {
     } finally {
       setLoading(false);
     }
+  }; */
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // ✅ Delay kecil biar terasa seperti request beneran (UX lebih enak)
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      // ✅ Notif yang jelas & enak dibaca
+      if (isEditing) {
+        toast.info(
+          "Mode Demo: Perubahan streetlight tidak disimpan.",
+          {
+            autoClose: 4500,
+          }
+        );
+      } else {
+        toast.info(
+          "Mode Demo: Streetlight baru tidak ditambahkan.",
+          {
+            autoClose: 4500,
+          }
+        );
+      }
+
+      // ✅ Optional: reset form supaya pengguna merasa action selesai
+      setCurrentLight({
+        _id: "",
+        anchor_code: "",
+        streetlight_code: "",
+        location: [0, 0],
+        installed_yet: 1,
+        condition: 1,
+        status: 0,
+        date: new Date().toISOString(),
+        __v: 0,
+      });
+
+      // ✅ Optional: matikan mode edit
+      setIsEditing(false);
+    } catch (error) {
+      toast.error("Terjadi kesalahan di mode demo. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Pagination handlers
@@ -160,6 +208,7 @@ const Streetlight = () => {
   const paginatedData = lights.slice(startIndex, startIndex + itemsPerPage);
 
   return (
+    <ProtectedRoute>
     <div className="flex flex-col lg:flex-row h-screen">
       {/* Overlay Loading */}
       {loading && (
@@ -360,6 +409,7 @@ const Streetlight = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

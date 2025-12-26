@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Layout from "../components/Layout";
 import StreetLightOverview from "./overview";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import ProtectedRoute from "../components/ProtectedRoute";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faLightbulb, faWifi, faHistory } from "@fortawesome/free-solid-svg-icons";
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
     const fetchEvents = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/events");
+        const response = await fetch("https://pju-backend.vercel.app/api/events");
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
@@ -146,9 +146,8 @@ const Dashboard: React.FC = () => {
         const lampId = selectedEvent.lampId;
         const anchor_code = lampId.charAt(0) + lampId.charAt(1);
         const streetlight_code = lampId.slice(2);
-        console.log(anchor_code, streetlight_code);
         try {
-          const response = await fetch(`https://backend-capstone-production-99e8.up.railway.app/api/notification/${anchor_code}/${streetlight_code}`);
+          const response = await fetch(`https://pju-backend.vercel.app/api/notification/${anchor_code}/${streetlight_code}`);
           const data = await response.json();
     
           // Periksa jika notifikasi ditemukan
@@ -189,7 +188,7 @@ const Dashboard: React.FC = () => {
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/on", {
+        const response = await fetch("https://pju-backend.vercel.app/api/mqtt/on", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -202,7 +201,6 @@ const Dashboard: React.FC = () => {
         }
   
         const data = await response.json();
-        console.log(data);
         toast.success("Streetlight turned on successfully!", {
           onClose: () => {
             window.location.reload();
@@ -231,7 +229,7 @@ const Dashboard: React.FC = () => {
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://backend-capstone-production-99e8.up.railway.app/api/mqtt/off", {
+        const response = await fetch("https://pju-backend.vercel.app/api/mqtt/off", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -244,7 +242,6 @@ const Dashboard: React.FC = () => {
         }
   
         const data = await response.json();
-        console.log(data);
         toast.success("Streetlight turned off successfully!", {
           onClose: () => {
             window.location.reload();
@@ -263,6 +260,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
+    <ProtectedRoute>
     <div className="bg-white min-h-screen h-screen">
       {/* Overlay Loading */}
         {isLoading && (
@@ -396,7 +394,7 @@ const Dashboard: React.FC = () => {
                           <p className="text-gray-600 font-semibold">Petugas perbaikan telah ditugaskan</p>
                         ) : selectedEvent.status === "Mati" && /^[^\d]+$/.test(selectedEvent.lampId) ? (
                           <div>
-                            <p className="text-gray-600 font-semibold">Light this sector?</p>
+                            <p className="text-gray-600 font-semibold">Select action</p>
                             <button
                               className="bg-blue-500 text-white px-6 py-2 mt-2 rounded-full font-semibold text-lg hover:bg-blue-600 hover:scale-105 transition-transform duration-200"
                               onClick={handleTurnOn}
@@ -404,16 +402,30 @@ const Dashboard: React.FC = () => {
                             >
                               On
                             </button>
-                          </div>
-                        ) : selectedEvent.status === "Hidup" && /^[^\d]+$/.test(selectedEvent.lampId) ? (
-                          <div>
-                            <p className="text-gray-600 font-semibold">Turn off this sector?</p>
                             <button
                               className="bg-blue-500 text-white px-6 py-2 mt-2 rounded-full font-semibold text-lg hover:bg-blue-600 hover:scale-105 transition-transform duration-200"
                               onClick={handleTurnOff}
                               disabled={isLoading}
                             >
                               Off
+                            </button>
+                          </div>
+                        ) : selectedEvent.status === "Hidup" && /^[^\d]+$/.test(selectedEvent.lampId) ? (
+                          <div>
+                            <p className="text-gray-600 font-semibold">Select action</p>
+                            <button
+                              className="bg-blue-500 text-white px-6 py-2 mt-2 rounded-full font-semibold text-lg hover:bg-blue-600 hover:scale-105 transition-transform duration-200"
+                              onClick={handleTurnOff}
+                              disabled={isLoading}
+                            >
+                              Off
+                            </button>
+                            <button
+                              className="bg-blue-500 text-white px-6 py-2 mt-2 rounded-full font-semibold text-lg hover:bg-blue-600 hover:scale-105 transition-transform duration-200"
+                              onClick={handleTurnOn}
+                              disabled={isLoading}
+                            >
+                              On
                             </button>
                           </div>
                         ) : null }
@@ -516,6 +528,7 @@ const Dashboard: React.FC = () => {
         </div>
       </Layout>
     </div>
+    </ProtectedRoute>
   );
 };
 
