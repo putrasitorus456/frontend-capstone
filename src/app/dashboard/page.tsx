@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
     const fetchEvents = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("https://pju-backend.vercel.app/api/events");
+        const response = await fetch("/api/events");
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
@@ -147,7 +147,7 @@ const Dashboard: React.FC = () => {
         const anchor_code = lampId.charAt(0) + lampId.charAt(1);
         const streetlight_code = lampId.slice(2);
         try {
-          const response = await fetch(`https://pju-backend.vercel.app/api/notification/${anchor_code}/${streetlight_code}`);
+          const response = await fetch(`/api/notification/${anchor_code}/${streetlight_code}`);
           const data = await response.json();
     
           // Periksa jika notifikasi ditemukan
@@ -188,7 +188,7 @@ const Dashboard: React.FC = () => {
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/mqtt/on", {
+        const response = await fetch("/api/mqtt/on", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -229,7 +229,7 @@ const Dashboard: React.FC = () => {
       setIsLoadingData(true); 
   
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/mqtt/off", {
+        const response = await fetch("/api/mqtt/off", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

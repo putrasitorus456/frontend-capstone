@@ -44,7 +44,7 @@ const Streetlight = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://pju-backend.vercel.app/api/streetlights");
+        const response = await fetch("/api/streetlights");
         if (!response.ok) throw new Error("Failed to fetch data");
         const data = await response.json();
         const sortedData = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -63,7 +63,33 @@ const Streetlight = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = async (_id: any) => {
+  const handleDelete = async (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e) e.preventDefault();
+    setLoading(true);
+
+    try {
+      // ✅ Delay kecil biar terasa seperti request beneran (UX lebih enak)
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      // ✅ Notif demo yang jelas
+      toast.info("Mode Demo: Streetlight tidak dihapus.", {
+        autoClose: 4500,
+      });
+
+      // ✅ Optional: kalau delete kamu biasanya dari modal, tutup modal di sini
+      // setShowDeleteModal(false);
+
+      // ✅ Optional: clear selected item biar terasa action selesai
+      // setSelectedLight(null);
+    } catch (error) {
+      toast.error("Terjadi kesalahan di mode demo. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // PAKE INI KALO REAL CASE
+  /* const handleDelete = async (_id: any) => {
     confirmAlert({
         title: 'Konfirmasi Hapus',
         message: 'Apakah anda yakin menghapus data ini?',
@@ -92,7 +118,7 @@ const Streetlight = () => {
             }
         ]
     });
-};
+}; */
 
   /* const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -368,7 +394,8 @@ const Streetlight = () => {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(light._id)}
+                        onClick={() => handleDelete}
+                        // onClick={() => handleDelete(light._id)}
                         className="text-red-600 hover:underline ml-4"
                       >
                         Delete

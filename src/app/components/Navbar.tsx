@@ -38,7 +38,7 @@ const Navbar = () => {
   // Fetch Notifications
   const fetchNotifications = async () => {
     try {
-      const response = await fetch("https://pju-backend.vercel.app/api/notification");
+      const response = await fetch("/api/notification");
       const data = await response.json();
 
       // Urutkan data berdasarkan tanggal terbaru
@@ -52,7 +52,7 @@ const Navbar = () => {
   // Fetch Responses
   const fetchResponses = async () => {
     try {
-      const response = await fetch("https://pju-backend.vercel.app/api/responses");
+      const response = await fetch("/api/responses");
       const data = await response.json();
 
       // Urutkan data berdasarkan tanggal terbaru

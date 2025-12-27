@@ -41,7 +41,7 @@ const Insight = () => {
       setLoading(true);
       try {
         if (activeTab === 'notification') {
-          const response = await fetch('https://pju-backend.vercel.app/api/notification');
+          const response = await fetch('/api/notification');
           const data: Notification[] = await response.json();
           setNotificationDataList(data);
 
@@ -100,7 +100,7 @@ const Insight = () => {
             ],
           });
         } else if (activeTab === 'repair') {
-          const response = await fetch('https://pju-backend.vercel.app/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
+          const response = await fetch('/api/responses'); // Ganti dengan endpoint API Repair yang sesuai
           const data: Repair[] = await response.json();
           setRepairDataList(data);
 
