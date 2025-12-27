@@ -193,3 +193,93 @@
     font-size: 0.75rem;
   }
 }
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* ====== Primary Button (Login) ====== */
+.loginButton {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.loginButton:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.35);
+}
+
+.loginButton:active {
+  transform: translateY(0px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+}
+
+.loginButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+}
+
+/* ====== Secondary Button (Demo) ====== */
+.demoButton {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(148, 163, 184, 0.6);
+  background: rgba(255, 255, 255, 0.6);
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.demoButton:hover {
+  background: rgba(241, 245, 249, 0.9);
+  border-color: rgba(37, 99, 235, 0.55);
+  transform: translateY(-1px);
+}
+
+.demoButton:active {
+  transform: translateY(0px);
+}
+
+.demoButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+/* Badge kecil di tombol demo */
+.demoBadge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+/* Responsive kecil */
+@media (max-width: 480px) {
+  .loginButton,
+  .demoButton {
+    border-radius: 10px;
+  }
+}

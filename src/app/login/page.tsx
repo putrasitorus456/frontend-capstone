@@ -1,6 +1,6 @@
-"use client"; // Mark this as a client component
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
@@ -11,20 +11,31 @@ const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error before login attempt
+    setError(null);
 
-    // Check if the username and password are correct
+    // Admin login (seperti sekarang)
     if (username === "admin" && password === "admin") {
       localStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(true);
       router.push("/dashboard");
     } else {
       setError("Username atau password salah.");
     }
+  };
+
+  // ✅ Demo login tanpa username/password
+  const handleDemoLogin = () => {
+    setError(null);
+
+    localStorage.setItem("isLoggedIn", "true");
+
+    // Optional: clear input biar clean
+    setUsername("");
+    setPassword("");
+
+    router.push("/dashboard");
   };
 
   return (
@@ -39,7 +50,7 @@ const Login = () => {
       <div className={styles.rightSide}>
         <h2 className={styles.greeting}>Hello Again!</h2>
         <p className={styles.welcomeText}>Please enter your login details below.</p>
-        
+
         <form className={styles.form} onSubmit={handleLogin}>
           {/* Username input field */}
           <div className={styles.inputWrapper}>
@@ -49,7 +60,7 @@ const Login = () => {
               placeholder="Username"
               className={styles.input}
               value={username}
-              onChange={(e) => setUsername(e.target.value)} // Controlled input
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -61,24 +72,33 @@ const Login = () => {
               placeholder="Password"
               className={styles.input}
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Controlled input
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          {/* Login button */}
-          <button type="submit" className={styles.loginButton}>
-            Login
-          </button>
+          <div className={styles.buttonGroup}>
+            <button type="submit" className={styles.loginButton}>
+              Login
+            </button>
 
-          {/* Conditionally rendered error message */}
+            <button
+              type="button"
+              className={styles.demoButton}
+              onClick={handleDemoLogin}
+            >
+              <span>Demo Mode</span>
+              <span className={styles.demoBadge}>No password</span>
+            </button>
+          </div>
+
+          {/* Error message */}
           {error && (
             <p className={styles.error}>
               <FontAwesomeIcon icon={faExclamationTriangle} /> {error}
             </p>
           )}
         </form>
-        
-        {/* Copyright information */}
+
         <p className={styles.copyright}>
           Tim Capstone C-09 DTETI FT UGM
         </p>

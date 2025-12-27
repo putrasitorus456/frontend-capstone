@@ -63,29 +63,40 @@ const Streetlight = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = async (e?: React.MouseEvent<HTMLButtonElement>) => {
-    if (e) e.preventDefault();
-    setLoading(true);
+  const handleDelete = async (_id: any) => {
+    confirmAlert({
+      title: "Konfirmasi Hapus",
+      message: "Apakah anda yakin menghapus data ini?",
+      buttons: [
+        {
+          label: "Ya",
+          onClick: async () => {
+            setLoading(true);
 
-    try {
-      // ✅ Delay kecil biar terasa seperti request beneran (UX lebih enak)
-      await new Promise((resolve) => setTimeout(resolve, 800));
+            try {
+              // ✅ Delay kecil biar terasa seperti request beneran (UX lebih enak)
+              await new Promise((resolve) => setTimeout(resolve, 800));
 
-      // ✅ Notif demo yang jelas
-      toast.info("Mode Demo: Streetlight tidak dihapus.", {
-        autoClose: 4500,
-      });
+              // ✅ Notif demo yang jelas
+              toast.info("Mode Demo: Data streetlight tidak dihapus.", {
+                autoClose: 4500,
+              });
 
-      // ✅ Optional: kalau delete kamu biasanya dari modal, tutup modal di sini
-      // setShowDeleteModal(false);
-
-      // ✅ Optional: clear selected item biar terasa action selesai
-      // setSelectedLight(null);
-    } catch (error) {
-      toast.error("Terjadi kesalahan di mode demo. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
+              // ✅ Tidak ada fetch DELETE
+              // ✅ Tidak ada setLights(filter) (karena itu delete di UI)
+            } catch (error) {
+              toast.error("Terjadi kesalahan di mode demo. Silakan coba lagi.");
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+        {
+          label: "Tidak",
+          onClick: () => {},
+        },
+      ],
+    });
   };
 
   // PAKE INI KALO REAL CASE
@@ -394,8 +405,7 @@ const Streetlight = () => {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete}
-                        // onClick={() => handleDelete(light._id)}
+                        onClick={() => handleDelete(light._id)}
                         className="text-red-600 hover:underline ml-4"
                       >
                         Delete
