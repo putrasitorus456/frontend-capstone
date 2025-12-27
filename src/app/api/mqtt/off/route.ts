@@ -1,3 +1,5 @@
+export const maxDuration = 15;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

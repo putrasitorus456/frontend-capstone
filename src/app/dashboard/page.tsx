@@ -278,7 +278,7 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-col items-center text-center">
               <div className="loader mb-4"></div> {/* Spinner */}
               <p className="text-lg font-semibold text-white">
-                This process takes up to 1-2 minutes, please be patient ...
+                This process takes up to 10-15 seconds, please be patient ...
               </p>
             </div>
           </div>
